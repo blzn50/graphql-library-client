@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ApolloProvider, ApolloClient, HttpLink, InMemoryCache, gql } from '@apollo/client';
+import { ApolloProvider, ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import './index.css';
 import App from './App';
 // import * as serviceWorker from './serviceWorker';
