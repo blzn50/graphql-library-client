@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { ALL_BOOKS } from '../queries';
+import { ALL_BOOKS, ALL_GENRES } from '../queries';
+
 const Books = (props) => {
-  const result = useQuery(ALL_BOOKS);
+  const [genre, setGenre] = useState('');
+  const genresResult = useQuery(ALL_GENRES);
+  const result = useQuery(ALL_BOOKS, {
+    variables: { genre },
+  });
 
   if (!props.show) {
     return null;
@@ -32,6 +37,13 @@ const Books = (props) => {
           ))}
         </tbody>
       </table>
+      <div>
+        {genresResult.data.allGenres.map((g) => (
+          <button key={g} onClick={() => setGenre(g)}>
+            {g}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
