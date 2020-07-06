@@ -11,11 +11,13 @@ const NewBook = (props) => {
 
   const [createBook] = useMutation(NEW_BOOK, {
     refetchQueries: [{ query: ALL_BOOKS }],
+    onError: (err) => {
+      props.setError(err.graphQLErrors[0].message);
+      setTimeout(() => {
+        props.setError(null);
+      }, 4000);
+    },
   });
-
-  if (!props.show) {
-    return null;
-  }
 
   const submit = async (event) => {
     event.preventDefault();
@@ -42,6 +44,10 @@ const NewBook = (props) => {
     setGenres(genres.concat(genre));
     setGenre('');
   };
+
+  if (!props.show) {
+    return null;
+  }
 
   return (
     <div>
