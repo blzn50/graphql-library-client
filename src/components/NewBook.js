@@ -10,13 +10,23 @@ const NewBook = (props) => {
   const [genres, setGenres] = useState([]);
 
   const [createBook] = useMutation(NEW_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }],
     onError: (err) => {
       console.log('err: ', err);
       props.setError(err.graphQLErrors[0].message);
       setTimeout(() => {
         props.setError(null);
       }, 4000);
+    },
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_BOOKS });
+
+      store.writeQuery({
+        query: ALL_BOOKS,
+        data: {
+          ...dataInStore,
+          allBooks: [...dataInStore.allBooks, response.data.newBook],
+        },
+      });
     },
   });
 

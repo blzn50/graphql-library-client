@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { useQuery, NetworkStatus } from '@apollo/client';
 import { ALL_BOOKS, ALL_GENRES } from '../queries';
 
 const Books = (props) => {
@@ -13,13 +13,17 @@ const Books = (props) => {
     return null;
   }
 
+  if (result.networkStatus === NetworkStatus.refetch) {
+    return <div>Re-fetching information...</div>;
+  }
+
   if (result.loading) {
     return <div>Loading...</div>;
   }
 
   return (
     <div>
-      <h2>books</h2>
+      <h2>Books</h2>
 
       <table>
         <tbody>
@@ -39,7 +43,13 @@ const Books = (props) => {
       </table>
       <div>
         {genresResult.data.allGenres.map((g) => (
-          <button key={g} onClick={() => setGenre(g)}>
+          <button
+            key={g}
+            onClick={() => {
+              setGenre(g);
+              result.refetch();
+            }}
+          >
             {g}
           </button>
         ))}
