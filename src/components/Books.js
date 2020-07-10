@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 import { useQuery, NetworkStatus } from '@apollo/client';
 import { ALL_BOOKS, ALL_GENRES } from '../queries';
 
-const Books = (props) => {
+const Books = ({ show }) => {
   const [genre, setGenre] = useState('');
   const genresResult = useQuery(ALL_GENRES);
-  const result = useQuery(ALL_BOOKS, {
+  const { loading, networkStatus, data, refetch } = useQuery(ALL_BOOKS, {
     variables: { genre },
   });
 
-  if (!props.show) {
+  if (!show) {
     return null;
   }
 
-  if (result.networkStatus === NetworkStatus.refetch) {
+  if (networkStatus === NetworkStatus.refetch) {
     return <div>Re-fetching information...</div>;
   }
 
-  if (result.loading) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
@@ -32,7 +32,7 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {result.data.allBooks.map((b) => (
+          {data.allBooks.map((b) => (
             <tr key={b.id}>
               <td>{b.title}</td>
               <td>{b.author.name}</td>
@@ -47,7 +47,7 @@ const Books = (props) => {
             key={g}
             onClick={() => {
               setGenre(g);
-              result.refetch();
+              refetch();
             }}
           >
             {g}

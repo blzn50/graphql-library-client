@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { NEW_BOOK, ALL_BOOKS } from '../queries';
+import { NEW_BOOK } from '../queries';
 
-const NewBook = (props) => {
+const NewBook = ({ show, setError, updateCacheWith }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [published, setPublished] = useState('');
@@ -12,13 +12,14 @@ const NewBook = (props) => {
   const [createBook] = useMutation(NEW_BOOK, {
     onError: (err) => {
       console.log('err: ', err);
-      props.setError(err.graphQLErrors[0].message);
+      setError(err.graphQLErrors[0].message);
       setTimeout(() => {
-        props.setError(null);
+        setError(null);
       }, 7000);
     },
     update: (store, response) => {
-      props.updateCacheWith(response.data.addBook);
+      // or update the cache here
+      // updateCacheWith(response.data.addBook);
     },
   });
 
@@ -46,7 +47,7 @@ const NewBook = (props) => {
     setGenre('');
   };
 
-  if (!props.show) {
+  if (!show) {
     return null;
   }
 

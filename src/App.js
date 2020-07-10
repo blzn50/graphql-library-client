@@ -19,11 +19,11 @@ const App = () => {
     const includedIn = (set, object) => {
       set.map((p) => p.id).includes(object.id);
     };
-    const dataInStore = client.readQuery({ query: ALL_BOOKS });
-    console.log('dataInStore: ', dataInStore);
+    const dataInStore = client.readQuery({ query: ALL_BOOKS, variables: { genre: '' } });
     if (!includedIn(dataInStore.allBooks, addedBook)) {
       client.writeQuery({
         query: ALL_BOOKS,
+        variables: { genre: '' },
         data: {
           allBooks: dataInStore.allBooks.concat(addedBook),
         },
@@ -84,7 +84,11 @@ const App = () => {
 
       <Books show={page === 'books'} />
 
-      <NewBook updateCacheWith={updateCacheWith} setError={setError} show={page === 'add'} />
+      <NewBook
+        //  updateCacheWith={updateCacheWith}
+        setError={setError}
+        show={page === 'add'}
+      />
 
       <Recommendation genre={genre} show={page === 'recommend'} />
 
