@@ -5,7 +5,7 @@ import Books from './components/Books';
 import NewBook from './components/NewBook';
 import Login from './components/Login';
 import Recommendation from './components/Recommendation';
-import { USER, ALL_BOOKS, BOOK_ADDED } from './queries';
+import { USER, ALL_BOOKS, BOOK_ADDED, ALL_AUTHORS } from './queries';
 
 const App = () => {
   const [page, setPage] = useState('authors');
@@ -19,6 +19,7 @@ const App = () => {
     const includedIn = (set, object) => {
       set.map((p) => p.id).includes(object.id);
     };
+    // For updating books
     const dataInStore = client.readQuery({ query: ALL_BOOKS, variables: { genre: '' } });
     if (!includedIn(dataInStore.allBooks, addedBook)) {
       client.writeQuery({
@@ -26,6 +27,17 @@ const App = () => {
         variables: { genre: '' },
         data: {
           allBooks: dataInStore.allBooks.concat(addedBook),
+        },
+      });
+    }
+
+    // For updating authors
+    const storeBooks = client.readQuery({ query: ALL_AUTHORS });
+    if (!includedIn(storeBooks.allAuthors, addedBook.author)) {
+      client.writeQuery({
+        query: ALL_AUTHORS,
+        data: {
+          allAuthors: storeBooks.allAuthors.concat(addedBook.author),
         },
       });
     }
