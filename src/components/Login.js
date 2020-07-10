@@ -10,7 +10,7 @@ const Login = ({ setError, setToken, setPage, show }) => {
       setError(err.graphQLErrors[0].message);
       setTimeout(() => {
         setError(null);
-      }, 3500);
+      }, 4000);
     },
   });
 

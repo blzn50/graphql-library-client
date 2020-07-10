@@ -15,18 +15,10 @@ const NewBook = (props) => {
       props.setError(err.graphQLErrors[0].message);
       setTimeout(() => {
         props.setError(null);
-      }, 4000);
+      }, 7000);
     },
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: ALL_BOOKS });
-
-      store.writeQuery({
-        query: ALL_BOOKS,
-        data: {
-          ...dataInStore,
-          allBooks: [...dataInStore.allBooks, response.data.newBook],
-        },
-      });
+      props.updateCacheWith(response.data.addBook);
     },
   });
 
@@ -41,8 +33,6 @@ const NewBook = (props) => {
         genres,
       },
     });
-
-    console.log('add book...');
 
     setTitle('');
     setPublished('');
